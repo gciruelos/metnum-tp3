@@ -3,8 +3,11 @@
 
 #include "matriz.h"
 #include <vector>
+#include <iostream>
 
-Matriz sistema_splines(int tamanio, std::vector<double> ys);
+std::vector<double>  sistema_splines_cs(int tamanio, std::vector<double> ys);
+
+std::vector<unsigned int> nn(std::vector<unsigned int> valores, int cuadros);
 
 
 #endif // METODOS_H

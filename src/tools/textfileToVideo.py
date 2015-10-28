@@ -3,8 +3,8 @@ import cv2
 #########################
 # Parametros de entrada.#
 #########################
-textFilename = '../data/funnybaby.txt'
-videoFilename = '../data/fb.avi'
+textFilename = 'aca.out'
+videoFilename = 'aca.avi'
 
 file = open(textFilename,"r")
 
@@ -22,7 +22,7 @@ print '   Height:\t' + str(height)
 print '   Widht:\t' + str(width)
 print '   Rrame Rate:\t' + str(frameRate)
 
-fourcc = cv2.cv.CV_FOURCC('M','J','P','G')
+fourcc = cv2.cv.CV_FOURCC('M','P','4','2')
 video = cv2.VideoWriter(videoFilename, fourcc, frameRate, (width,height),0)
 
 for k in range(0,int(nFrames)):
