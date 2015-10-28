@@ -61,7 +61,7 @@ int main(int argc, char * argv[]){
     
     std::vector<std::vector<unsigned int> > resultado;
     
-    
+    /*
 	for(unsigned int pixel = 0; pixel < height * width; pixel++){
 		std::vector<unsigned int> valores;
 		std::vector<unsigned int> interpolado;
@@ -81,18 +81,18 @@ int main(int argc, char * argv[]){
   
     for(unsigned int cuadro = 0; cuadro < nuevos_cuadros; cuadro++){
 		for(unsigned int pixel = 0; pixel < height * width; pixel++){
-            out_file >> frames[pixel][cuadro];
+            out_file << frames[pixel][cuadro];
         }
     }
     
+    */
     
 	std::vector<double> b(3);
 	b[0] = 1;
 	b[1] = 2;
 	b[2] = 3;
 	
-	Matriz a = sistema_splines(3, b); 
-	a.mostrar();
+	sistema_splines(3, b); 
  
     return 0;
 }

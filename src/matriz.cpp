@@ -73,7 +73,7 @@ std::vector<double> Matriz::gaussian_elim(std::vector<double> b){
   int n = b.size();
   Matriz gauss(this);
 
-  for(int i = 0; i<n; i++){
+  for(int i = 0; i<n-1; i++){
 	  int fila = i+1;
       // modifico la fila
       // lo hago desde la posicion (i,i-1) hasta (i,i + 1), porque son los unicos elementos distintos de 0.
