@@ -39,8 +39,8 @@ int main(int argc, char * argv[]){
 
     frames = std::vector<std::vector<unsigned int> >(height * width);
 
-    for(unsigned int pixel = 0; pixel < height * width; pixel++){
-        for(unsigned int cuadro = 0; cuadro < c; cuadro++){
+    for(unsigned int cuadro = 0; cuadro < c; cuadro++){
+		for(unsigned int pixel = 0; pixel < height * width; pixel++){
             unsigned int gris;
             input_file >> gris;
             frames[pixel].push_back(gris);
@@ -56,8 +56,35 @@ int main(int argc, char * argv[]){
 
     // abrimos el archivo de la red y lo cargamos 
     // ACA YA ESTA TODO LISTO PARA SER USADO
-    std::ofstream solus_file(argv[2], std::ofstream::out);
-
+    std::ofstream out_file(argv[2], std::ofstream::out);
+    
+    
+    std::vector<std::vector<unsigned int> > resultado;
+    
+    
+	for(unsigned int pixel = 0; pixel < height * width; pixel++){
+		std::vector<unsigned int> valores;
+		std::vector<unsigned int> interpolado;
+		
+		//crear interpolado
+		resultado.push_back(interpolado);
+            unsigned int gris;
+            input_file >> gris;
+            frames[pixel].push_back(gris);
+    }
+    
+    unsigned int nuevos_cuadros = (c-1) * cant_cuadros + c;
+    out_file << nuevos_cuadros << std::endl;
+    out_file << height << " " << width << std::endl;
+    out_file << f << std::endl;    
+  
+  
+    for(unsigned int cuadro = 0; cuadro < nuevos_cuadros; cuadro++){
+		for(unsigned int pixel = 0; pixel < height * width; pixel++){
+            out_file >> frames[pixel][cuadro];
+        }
+    }
+    
     
 	std::vector<double> b(3);
 	b[0] = 1;
