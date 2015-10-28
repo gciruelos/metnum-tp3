@@ -3,7 +3,8 @@
 #include <vector>
 #include <string>
 #include <stdlib.h>
-//#include "problema.h"
+#include "matriz.h"
+#include "metodos.h"
 
 
 enum metodo {
@@ -58,10 +59,13 @@ int main(int argc, char * argv[]){
     std::ofstream solus_file(argv[2], std::ofstream::out);
 
     
-
-  
- 
-
+	std::vector<double> b(3);
+	b[0] = 1;
+	b[1] = 2;
+	b[2] = 3;
+	
+	Matriz a = sistema_splines(3, b); 
+	a.mostrar();
  
     return 0;
 }
