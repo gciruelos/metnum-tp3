@@ -74,10 +74,10 @@ int main(int argc, char * argv[]){
 		
 		if(m == NN)
 			interpolado = nn(valores, cant_cuadros);
-		else if(m == LINEAL);
-			//interpolado = lineal(valores, cant_cuadros);
-		else if(m == SPLINES);
-			//interpolado = splines(valores, cant_cuadros);
+		else if(m == LINEAL)
+			interpolado = lineal(valores, cant_cuadros);
+		else if(m == SPLINES)
+			interpolado = splines(valores, cant_cuadros);
 		
 		
 		resultado.push_back(interpolado);
