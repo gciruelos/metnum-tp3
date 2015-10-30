@@ -82,8 +82,9 @@ std::vector<double> Matriz::gaussian_elim(std::vector<double> b){
       double prim = gauss(fila,i);
      
       double coeff = prim/gauss(i,i);
-      for(int j = i+1; j<n; j++){ 
+      for(int j = i+1; j<=i+2; j++){ 
         gauss(fila, j) -= gauss(i, j) * coeff;
+      	
       }
       gauss(fila, i) = 0.0;
       
