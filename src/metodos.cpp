@@ -1,6 +1,7 @@
 #include "metodos.h"
+#define MIN(a,b) ((a)<(b)?(a):(b))
 
-// h = 1
+const double h = 1;
 
 
 /*****************************************************************************
@@ -9,11 +10,13 @@
 
 template <typename T>
 void printv(std::vector<T> v){
+	std::cout << "{" ;
 	for(int i = 0; i < v.size(); i++){
-		if(i != 0) std::cout << ",";
+		if(i != 0) std::cout << ", ";
 		std::cout << v[i];
 	}
-	std::cout << std::endl;
+	
+	std::cout << "}"<< std::endl;
 }
 
 std::vector<unsigned int> double_to_pixel(std::vector<double> ds){
@@ -107,81 +110,92 @@ std::vector<unsigned int> lineal(std::vector<unsigned int> valores_i, int cuadro
  *   SPLINES CUBICOS
  *****************************************************************************/
 
-std::vector<unsigned int> splines(std::vector<unsigned int> valores_i, int cuadros){
-    std::vector<double> valores = pixel_to_double(valores_i);
-	std::vector<double> interpolados;
+void splines_bloque(std::vector<double> ys, int cuadros,
+                    std::vector<double>* resultado){
+			
+	int sz = ys.size() + 1;
+	int n = sz - 1;
+    std::vector<double> as = ys;
+    std::vector<double> bs(sz);
+    std::vector<double> cs(sz);
+    std::vector<double> ds(sz);
+    
+    
+    // STEP 1 : nada
+    // STEP 2
+    std::vector<double> alpha(sz);
+    for(int i = 1; i < n; i++){ 
+		alpha[i] = 3*(as[i+1]-as[i])/h - 3*(as[i]-as[i-1])/h;
+	}
 	
-	/* 
-       La tablita de valores es:
-       0 | valores[0]
-       1 | valores[1]
-        ...
-       i | valores[i]
-        ...
-       n | valores[n]
-
-       Todo el resto es muy parecido a interpolacion lineal
-    */
-
-    std::vector<double> as = valores;
-    std::vector<double> bs;
-    std::vector<double> cs;
-    std::vector<double> ds;
-
-	for(int i = 0; i < valores.size() - 1; i++){
-		interpolados.push_back(valores[i]);
+	// STEP 3
+	std::vector<double> l(sz);	
+	std::vector<double> mu(sz);	
+	std::vector<double> z(sz);
+	l[0] = 1;
+	mu[0] = 0;
+	z[0] = 0;
+	
+	// STEP 4
+	for(int i = 1; i < n; i++){ 
+		l[i] = 2*(2*h) - h * mu[i-1];
+		mu[i] = h/l[i];
+		z[i] = (alpha[i] - h*z[i-1])/l[i];
+	}
+	
+	// STEP 5
+	l[n] = 1;
+	z[n] = 0;
+	cs[n] = 0;
+	
+	// STEP 6
+	for(int j = n-1; j >= 0; j--){
+		cs[j] = z[j] - mu[j]*cs[j+1];
+		bs[j] = (as[j+1] - as[j])/h - h*(cs[j+1] + 2*cs[j])/3;
+		ds[j] = (cs[j+1] - cs[j])/(3*h);
+	}
+			
+	for(int i = 0; i < sz - 1; i++){
+		resultado->push_back(ys[i]);
         // aca tengo que interpolar usando splines
         // (i, valores[i]) (i+1, valores[i+1])
         for(int j = 0; j < cuadros; j++){
             /*
                   z_0   z_1 .... z_{cuadros-1}
-              i ---|-----|-------------|------i+1
+              i ---|-----|-------------|------i+h
 
               En realidad el z_j del programa es   z_j - i, o sea, 
               0 < z_j < 1
             */
-            double z_j = ((double) (j+1)) / (cuadros+1); 
-            interpolados.push_back(as[i] +
-                                   bs[i] * z_j +
-                                   cs[i] * z_j * z_j + 
-                                   ds[i] * z_j * z_j * z_j);
+            double z_j = h*((double) (j+1)) / (cuadros+1); 
+            resultado->push_back(as[i] +
+                                 bs[i] * z_j +
+                                 cs[i] * z_j * z_j + 
+                                 ds[i] * z_j * z_j * z_j);
         }
 	}
+}
+
+std::vector<unsigned int> splines(std::vector<unsigned int> valores_i, int cuadros,
+                                  int radio){
+    std::vector<double> valores = pixel_to_double(valores_i);
+	std::vector<double> interpolados;
+	
+    int inicio = 0;
+    while (inicio < valores.size()){
+		std::vector<double> bloque;
+		int n = MIN(radio, valores.size()-inicio)-1;
+		for(int i = 0; i < n; i++){
+			bloque.push_back(valores[inicio+i]);
+		}
+		splines_bloque(bloque, cuadros, &interpolados);
+		inicio += radio-1;
+	}
 	interpolados.push_back(valores[valores.size()-1]);
+	//printv(interpolados);
 	
 	return double_to_pixel(interpolados);
 }	
-
-
-
-std::vector<double> sistema_splines_cs(int tam, std::vector<double> ys){
-	tam++;
-	
-	
-	
-	Matriz matriz_splines(tam, tam, 0);
-	
-	for(int i = 1; i<tam-1; i++){
-		matriz_splines(i,i)   = 4;
-		matriz_splines(i,i-1) = 1;
-		matriz_splines(i,i+1) = 1;
-	}
-	matriz_splines(0,0) = 1;
-	matriz_splines(tam-1, tam-1) = 1;
-	
-	std::vector<double> z(tam);
-	z[0] = 0;
-	z[tam-1] = 0;
-	for(int i = 1; i<tam-2; i++){
-		z[i] = 3*(ys[i+1]-2*ys[i]-ys[i-1]);		
-	}
-	
-	matriz_splines.mostrar();
-	
-	// cs tiene c0..cn, a0..an esta en ys,
-	// falta guardar en res eso mas d0..dn y b0..bn
-	return matriz_splines.gaussian_elim(z);
-}
 
 	
 

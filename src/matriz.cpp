@@ -68,28 +68,26 @@ std::vector<double> Matriz::forward_subst(std::vector<double> b){
   return x;
 }
 
-
 std::vector<double> Matriz::gaussian_elim(std::vector<double> b){
   int n = b.size();
   Matriz gauss(this);
 
-  for(int i = 0; i<n-1; i++){
-	  int fila = i+1;
-      // modifico la fila
-      // lo hago desde la posicion (i,i-1) hasta (i,i + 1), porque son los unicos elementos distintos de 0.
+  for(int i = 0; i<n; i++){
+    for(int fila = i+1; fila < n; fila++){
+      // modifico la fila 
       // f_j - cte_fila * f_i 
       // cte_fila = prim/a_ii, donde prim es el primero de la fila
       double prim = gauss(fila,i);
      
       double coeff = prim/gauss(i,i);
-      for(int j = i+1; j<=i+2; j++){ 
+      for(int j = i+1; j<n; j++){ 
         gauss(fila, j) -= gauss(i, j) * coeff;
-      	
       }
       gauss(fila, i) = 0.0;
       
       //modifico b
-      b[fila] -= b[i] * coeff;     
+      b[fila] -= b[i] * coeff; 
+    } 
   }
 
   // es triangular superior, aplicamos backward substitution

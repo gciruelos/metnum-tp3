@@ -77,7 +77,7 @@ int main(int argc, char * argv[]){
 		else if(m == LINEAL)
 			interpolado = lineal(valores, cant_cuadros);
 		else if(m == SPLINES)
-			interpolado = splines(valores, cant_cuadros);
+			interpolado = splines(valores, cant_cuadros, 22);
 		
 		
 		resultado.push_back(interpolado);
@@ -100,15 +100,24 @@ int main(int argc, char * argv[]){
         }
     }
     
-   
+ 
     /*
-	std::vector<double> b(3);
+	std::vector<double> b(4);
 	b[0] = 1;
 	b[1] = 2;
 	b[2] = 3;
+	b[3] = 0;
 	
-	sistema_splines_cs(3, b); 
+	sistema_splines_cs(b); 
  */
+ /*
+    std::vector<unsigned int> ej(4);
+    ej[0] = 0;
+    ej[1] = 2;
+    ej[2] = 1;
+    ej[3] = 0;
+    splines(ej, 1);
+   */
     return 0;
 }
 

@@ -3,7 +3,7 @@ import cv2
 #########################
 # Parametros de entrada.#
 #########################
-textFilename = 'data/out.txt'
+textFilename = 'aca.out'
 videoFilename = 'data/out.avi'
 
 file = open(textFilename,"r")
