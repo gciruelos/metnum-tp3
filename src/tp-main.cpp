@@ -77,7 +77,7 @@ int main(int argc, char * argv[]){
 		else if(m == LINEAL)
 			interpolado = lineal(valores, cant_cuadros);
 		else if(m == SPLINES)
-			interpolado = splines(valores, cant_cuadros, 22);
+			interpolado = splines(valores, cant_cuadros, 10);
 		
 		
 		resultado.push_back(interpolado);

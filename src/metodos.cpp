@@ -25,7 +25,7 @@ std::vector<unsigned int> double_to_pixel(std::vector<double> ds){
 		int x = ds[i];
 		if(x > 255) x = 255;
 		else if(x < 0) x = 0;
-		is.push_back((unsigned int) x);
+		is.push_back((unsigned int) (x + 0.5));
 	}
 	return is;
 }
@@ -112,9 +112,10 @@ std::vector<unsigned int> lineal(std::vector<unsigned int> valores_i, int cuadro
 
 void splines_bloque(std::vector<double> ys, int cuadros,
                     std::vector<double>* resultado){
+    std::vector<double> local;
 			
-	int sz = ys.size() + 1;
-	int n = sz - 1;
+	int sz = ys.size();
+	int n = sz-1;
     std::vector<double> as = ys;
     std::vector<double> bs(sz);
     std::vector<double> cs(sz);
@@ -155,8 +156,9 @@ void splines_bloque(std::vector<double> ys, int cuadros,
 		ds[j] = (cs[j+1] - cs[j])/(3*h);
 	}
 			
-	for(int i = 0; i < sz - 1; i++){
+	for(int i = 0; i < n; i++){
 		resultado->push_back(ys[i]);
+        local.push_back(ys[i]);
         // aca tengo que interpolar usando splines
         // (i, valores[i]) (i+1, valores[i+1])
         for(int j = 0; j < cuadros; j++){
@@ -172,8 +174,12 @@ void splines_bloque(std::vector<double> ys, int cuadros,
                                  bs[i] * z_j +
                                  cs[i] * z_j * z_j + 
                                  ds[i] * z_j * z_j * z_j);
+            local.push_back(as[i] +
+                                 bs[i] * z_j +
+                                 cs[i] * z_j * z_j + 
+                                 ds[i] * z_j * z_j * z_j);
         }
-	}
+	} 
 }
 
 std::vector<unsigned int> splines(std::vector<unsigned int> valores_i, int cuadros,
@@ -184,13 +190,17 @@ std::vector<unsigned int> splines(std::vector<unsigned int> valores_i, int cuadr
     int inicio = 0;
     while (inicio < valores.size()){
 		std::vector<double> bloque;
-		int n = MIN(radio, valores.size()-inicio)-1;
+		int n = MIN(radio, valores.size()-inicio);
+        //std::cout << inicio << " " << n << std::endl << "\t";
 		for(int i = 0; i < n; i++){
+            //std::cout << inicio+i << ", ";
 			bloque.push_back(valores[inicio+i]);
 		}
+        //std::cout << std::endl;
 		splines_bloque(bloque, cuadros, &interpolados);
 		inicio += radio-1;
 	}
+    //std::cout << std::endl;
 	interpolados.push_back(valores[valores.size()-1]);
 	//printv(interpolados);
 	
