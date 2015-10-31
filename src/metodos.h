@@ -1,7 +1,6 @@
 #ifndef METODOS_H
 #define METODOS_H
 
-#include "matriz.h"
 #include <vector>
 #include <iostream>
 

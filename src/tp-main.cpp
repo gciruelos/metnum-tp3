@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <stdlib.h>
-#include "matriz.h"
 #include "metodos.h"
 
 
@@ -32,12 +31,10 @@ int main(int argc, char * argv[]){
     // a ser un vector de c(uadros) cantidad de entradas cada uno
     std::vector<std::vector<unsigned int> > frames;
 
-    std::cout << cant_cuadros << std::endl;
     // abrimos el archivo de parametro y cargamos todo
     std::ifstream input_file(argv[1]);
     input_file >> c >> height >> coma >> width >> f;
     
-    std::cout << height << " " << width << std::endl;
     frames = std::vector<std::vector<unsigned int> >(height * width);
 
     for(unsigned int cuadro = 0; cuadro < c; cuadro++){
@@ -59,13 +56,23 @@ int main(int argc, char * argv[]){
         frames[pixel].shrink_to_fit();
     */
 
+
+
+    std::cout << "Interpolando usando el algoritmo ";
+	if(m == NN)
+        std::cout << "<<Nearest Neighbour>>";
+	else if(m == LINEAL)
+        std::cout << "<<Interpolacion Lineal>>";
+	else if(m == SPLINES)
+        std::cout << "<<Splines>>";
+
+    std::cout << ". cant_cuadros = " << cant_cuadros << std::endl;
     // abrimos el archivo de la red y lo cargamos 
     // ACA YA ESTA TODO LISTO PARA SER USADO
     std::ofstream out_file(argv[2], std::ofstream::out);
     
     
-    std::vector<std::vector<unsigned int> > resultado;
-    
+    std::vector<std::vector<unsigned int> > resultado; 
     
 	for(unsigned int pixel = 0; pixel < height * width; pixel++){
 		std::vector<unsigned int> valores = frames[pixel];
