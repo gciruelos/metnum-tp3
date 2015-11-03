@@ -1,14 +1,17 @@
 import numpy as np
 import cv2
+import sys
 
 #########################
 # Parametros de entrada.#
 #########################
-videoFilename = '../data/funnybaby.avi'
-textFilename = '../data/funnybaby.txt'
-salto = 1 
+videoFilename = sys.argv[1]
+textFilename = sys.argv[2]
+salto = int(sys.argv[3])+1
+print salto
 
-# Abrimos archivo de video. 
+
+# Abrimos archivo de video.
 video = cv2.VideoCapture(videoFilename)
 
 # Obtenemos informacion basica.
@@ -26,7 +29,7 @@ print '   Width:\t' + str(width)
 
 # Guardamos informacion general en el archivo de salida.
 f = open(textFilename,'w')
-f.write(str(int(nFrames)) + '\n')
+f.write(str(1 + int(nFrames) // salto) + '\n')
 f.write(str(int(height)) + ',' + str(int(width)) + '\n')
 f.write(str(int(frameRate)) + '\n')
 

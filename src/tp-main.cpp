@@ -94,6 +94,7 @@ int main(int argc, char * argv[]){
     }
     
     unsigned int nuevos_cuadros = (c-1) * cant_cuadros + c;
+    std::cout << c << " " << cant_cuadros << " "<<  nuevos_cuadros << std::endl;
     out_file << nuevos_cuadros << std::endl;
     out_file << height << "," << width << std::endl;
     out_file << f << std::endl;    

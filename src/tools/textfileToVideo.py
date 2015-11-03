@@ -1,10 +1,12 @@
 import numpy as np
 import cv2
+import sys
+
 #########################
 # Parametros de entrada.#
 #########################
-textFilename = 'aca.out'
-videoFilename = 'data/out.avi'
+textFilename = sys.argv[1]
+videoFilename = sys.argv[2]
 
 file = open(textFilename,"r")
 
@@ -20,7 +22,7 @@ print 'Parametros generales del video:'
 print '   # frames:\t' + str(nFrames)
 print '   Height:\t' + str(height)
 print '   Widht:\t' + str(width)
-print '   Rrame Rate:\t' + str(frameRate)
+print '   Frame Rate:\t' + str(frameRate)
 
 fourcc = cv2.cv.CV_FOURCC('M','P','4','2')
 video = cv2.VideoWriter(videoFilename, fourcc, frameRate, (width,height),0)
