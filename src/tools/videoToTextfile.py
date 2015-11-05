@@ -8,7 +8,6 @@ import sys
 videoFilename = sys.argv[1]
 textFilename = sys.argv[2]
 salto = int(sys.argv[3])+1
-print salto
 
 
 # Abrimos archivo de video.
@@ -20,12 +19,9 @@ frameRate = video.get(cv2.cv.CV_CAP_PROP_FPS)
 height = video.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
 width = video.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
 
-print 'Abriendo archivo: ' + str(video.isOpened())
+#print 'Abriendo archivo: ' + str(video.isOpened())
 print 'Info del video:'
-print '   # frames:\t' + str(nFrames)
-print '   Frame Rate:\t' + str(frameRate)
-print '   Height:\t' + str(height)
-print '   Width:\t' + str(width)
+print '\t# frames:', str(nFrames), '\tHeight:', str(height), '\tWidht:', str(width), '\tFrame Rate:',str(frameRate)
 
 # Guardamos informacion general en el archivo de salida.
 f = open(textFilename,'w')
@@ -49,5 +45,5 @@ for k in xrange(0,int(nFrames),salto):
 
 video.release()
 cv2.destroyAllWindows()
-print 'Fin'
+#print 'Fin'
 

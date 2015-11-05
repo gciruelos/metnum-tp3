@@ -66,7 +66,8 @@ int main(int argc, char * argv[]){
 	else if(m == SPLINES)
         std::cout << "<<Splines>>";
 
-    std::cout << ". cant_cuadros = " << cant_cuadros << std::endl;
+    std::cout << ". cant_cuadros = " << cant_cuadros
+              << " ("<<  (c-1) * cant_cuadros << ")"<< std::endl;
     // abrimos el archivo de la red y lo cargamos 
     // ACA YA ESTA TODO LISTO PARA SER USADO
     std::ofstream out_file(argv[2], std::ofstream::out);

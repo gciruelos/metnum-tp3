@@ -19,10 +19,7 @@ frameRate = int(file.readline())
 
 # Imprimimos los parametros, para validar.
 print 'Parametros generales del video:'
-print '   # frames:\t' + str(nFrames)
-print '   Height:\t' + str(height)
-print '   Widht:\t' + str(width)
-print '   Frame Rate:\t' + str(frameRate)
+print '\t# frames:', str(nFrames), '\tHeight:', str(height), '\tWidht:', str(width), '\tFrame Rate:',str(frameRate)
 
 fourcc = cv2.cv.CV_FOURCC('M','P','4','2')
 video = cv2.VideoWriter(videoFilename, fourcc, frameRate, (width,height),0)

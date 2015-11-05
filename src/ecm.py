@@ -14,8 +14,9 @@ file_original = open(original,"r")
 file_interpolado = open(interpolado,"r")
 
 # Guardamos informacion basica.
-nFrames = int(file_original.readline())
-file_interpolado.readline()
+nFrames_original = int(file_original.readline())
+nFrames_interpol = int(file_interpolado.readline())
+nFrames = min([nFrames_original, nFrames_interpol])
 
 hw = file_original.readline().split(',')
 file_interpolado.readline()
@@ -25,11 +26,15 @@ width = int(hw[1])
 file_original.readline()
 file_interpolado.readline()
 
-ecm = 0.0
+ecms = []
+psnrs = []
+print 'nFrames', nFrames_original, nFrames_interpol
 
-for k in range(0,int(nFrames)):
+for k in range(0,int(nFrames)-1):
     frame_original = np.zeros((height,width,1), np.uint8)
     frame_interpolado = np.zeros((height,width,1), np.uint8)
+
+    ecm = 0.0
 
     for i in range(0,int(height)):
         line_original = file_original.readline().split(',')
@@ -44,6 +49,11 @@ for k in range(0,int(nFrames)):
                 dif = int(frame_original[i][j][0]) - int(frame_interpolado[i][j][0])
                 ecm += float(dif)**2.0
 
-ecm /= float(height*width)
-print 'Error cuadratico medio', ecm
-print 'Peak to Signal Noise Ratio', 10 * log10(255.0**2 / ecm)
+        ecm /= float(height*width)
+        if ecm > 0.0001:
+            ecms.append(ecm)
+            psnrs.append(10 * log10(255.0**2 / ecm))
+
+print 'Error Cuadratico Medio', ecms
+print 'Peak to Signal Noise Ratio', psnrs
+print len(ecms)
