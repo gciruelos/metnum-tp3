@@ -1,1 +1,25 @@
+El objetivo del presente informe es resolver un problema práctico mediante el modelado matemático del mismo. Este problema consiste en generar videos en camará lenta dados los videos originales, utilizando métodos de interpolación numérica.
+
+Por lo tanto, vamos a tener que colocar más cuadros entre cada par de cuadros consecutivos del video original. Para esto, vamos a pensar un pixel del video a lo largo de todos los frames.
+\[p_{ij}(f)\]
+
+Donde el pixel (ij-ésimo) de un video depende del frame. Entonces, la idea va a ser interpolar esta función para obtener los potenciales valores intermedios. 
+
+Entonces, por ejemplo, si tenemos un video de 1x1 píxeles, y los valores
+
+\[ p_{11}(0), p_{11}(1), ..., p_{11}(n)\]
+
+Si nos piden colocar 2 nuevos frames entre cada frame viejo, vamos a estar interesado en los valores
+
+\begin{center}
+\begin{tabular}{c}
+$p_{11}\left(0\right), p_{11}\left(\frac13\right), p_{11}\left(\frac23\right), p_{11}\left(1\right), p_{11}\left(\frac43\right), p_{11}\left(\frac53\right), p_{11}\left(2\right), ...,$ \\
+$p_{11}\left(n-1\right), p_{11}\left(n- \frac23\right), p_{11}\left(n- \frac13\right), p_{11}\left(n\right)$ \\
+\end{tabular}
+\end{center}
+
+Entonces la idea es fijar un algoritmo de interpolación y obtener todos esos valores, para luego poder rearmar el video.
+
+Estos métodos, además de permitirnos realizar cámaras lentas, también permiten realizar interpolación para otros fines.
+Por ejemplo, al streamear un video, podríamos bien no recibir todos los cuadros del video, y que el reproductor los interpole acordemente para generar un video fluido. Otro ejemplo de uso es una cámara -- de mala calidad -- que no puede filmar a 24 cuadros por segundo, pero que sin embargo con estos algoritmos, a partir de videos de menor framerate, podemos generear videos fluidos.
 

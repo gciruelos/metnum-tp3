@@ -1,0 +1,73 @@
+\subsection{Convenciones}
+
+
+
+\subsection{Métodos numéricos usados}
+
+Como dijimos en la introducción, nuestro objetivo será, dada una lista de valores que toma un pixel a lo largo de diferentes frames, obtener una función que los interpole y luego usarla para obtener valores intermedios.
+
+Dados,
+
+\[ p_0, p_1, p_2, ..., p_n \]
+
+Queremos obtener \[p_{ij}(f) \]
+
+Tal que \[p_{ij}(0) = p_0, p_{ij}(1) = p_1, p_{ij}(2) = p_2, ..., p_{ij}(n) = p_n\]
+
+Y el resto de los valores intermedios se obtienen usando $p_{ij}$. Entonces, si nos piden colocar $k$ cuadros entre 2 cuadros existentes (supongamos cuadro 0 y cuadro 1 por simplicidad), debemos computar los siguientes valores:
+
+\[p_{ij}\left(\frac1{k+1}\right), p_{ij}\left(\frac2{k+1}\right), p_{ij}\left(\frac3{k+1}\right), ..., p_{ij}\left(\frac{k}{k+1}\right)\]
+
+Y análogamente para el resto de los cuadros.
+
+Ahora pasemos a ver los métodos implementados y analizados en este trabajo.
+
+
+\subsubsection{Vecino más cercano}
+
+El primer método, llamado vecino más cercano o \emph{nearest neighbour} en inglés, se basa en interpolar un punto por el valor del punto más cercano conocido. Formalmente, si $(x_1, y_1), ..., (x_n, y_n)$ son nuestros puntos de dato, la función que interpola sería:
+
+\[ f(x) = f(\argmin_{i} |x - x_i|) \]
+\[ f(x_i) = y_i \]
+
+En el caso particular de este problema, es más simple aún. Si tenemos que colocar $k$ cuadros entre 2 cuadros consecutivos $c_1$ y $c_2$, simplemente podemos poner $\frac{k}{2}$ cuadros con el valor de $c_1$ y luevo $\frac{k}{2}$ cuadros con el valor de $c_2$.
+
+
+En el caso de que $k$ sea impar, simplemente tenemos un valor en el medio al que podemos darle cualquiera de los 2 valores, es una decisión de diseño. En el caso de este trabajo, ese valor es $c_2$
+
+
+\subsubsection{Interpolación lineal}
+
+La interpolación lineal (de a trozos) es la interpolación polinomial de a trozos más simple. Consiste en unir una serie de puntos
+
+\[ (x_0, f(x_0)), (x_1, f(x_1)), (x_2, f(x_2)), ..., (x_n, f(x_n)) \]
+
+por lineas rectas. Una desventaja de este método, como analizaremos en la experimentación, es que no necesariamente la función resultante va a ser diferenciable en los $x_i$, algo generalmente deseable, sobre todo en este caso en que la no diferenciabilidad se vería reflejada en cambios bruscos en el video.
+
+En general, dados los puntos $(x_i, f(x_i)), (x_{i+1}, f(x_{i+1}))$, si queremos interpolarlos con una recta obtenemos
+
+\[ l_i(x) = f(x_i) + \frac{f(x_{i+1}) - f(x_i)}{x_{i+1} - x_i} (x - x_i) \]
+
+Entonces, el algoritmo se basa en esa fórmula, evaluándola en los puntos que se nombraron anteriormente.
+
+\subsubsection{Splines cúbicos}
+
+Los splines cúbicos son una interpolación polinómica (cúbica) de a trozos, que se basa en pedirle condiciones fuertes a los polinomios cúbicos que interpolan cada trozo de la función. En el caso del spline natural, si le llamamos $S_i$ al $i$ésimo spline cubico,
+
+\begin{enumerate}
+    \item $S_i(x_i) = S_i(x_{i+1})$, es decir, que la función resultante sea continua en todo punto.
+    \item $S_i'(x_i) = S_i'(x_{i+1})$, es decir, que la función resultante sea derivable en todo punto.
+    \item $S_i''(x_i) = S_i''(x_{i+1})$, es decir, que la función resultante sea segundo derivable en todo punto.
+    \item $S_0''(x_0) = S_{n-1}''(x_n) = 0$, porque esta es la condición del spline natural.
+\end{enumerate}
+
+Este método obviamente permite obtener como resultado una función mas apropiada, a priori, para nuestro problema, dado que la derivabilidad nos garantiza que las transiciones van a ser más suaves que con la interpolación lineal.
+
+En el caso de este trabajo, se requirió que la cantidad de cuadros que se tienen en cuenta para hacer el spline sea fija y a elección del usuario. Analizaremos las implicaciones de esto en la experimentación.
+
+Para una explicación más profunda del método, se puede consultar \cite{burden}. Además, la implementación de splines de este trabajo también esta basada en \cite{burden}, posee algunas correcciones y está modificada para permitir realizar la interpolación de a bloques de tamaño fijo.
+
+
+
+
+
