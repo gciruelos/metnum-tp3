@@ -7,7 +7,8 @@ from math import *
 #########################
 original = sys.argv[1]
 interpolado = sys.argv[2]
-cant_cuadros = int(sys.argv[3])
+salida = sys.argv[3]
+cant_cuadros = int(sys.argv[4])
 
 
 file_original = open(original,"r")
@@ -54,6 +55,14 @@ for k in range(0,int(nFrames)-1):
             ecms.append(ecm)
             psnrs.append(10 * log10(255.0**2 / ecm))
 
-print 'Error Cuadratico Medio', ecms
-print 'Peak to Signal Noise Ratio', psnrs
-print len(ecms)
+# print 'Error Cuadratico Medio', ecms
+# print 'Peak to Signal Noise Ratio', psnrs
+# print len(ecms)
+
+output_file = open(salida, "a")
+output_file.write("Corresponde a: " + interpolado + "\n")
+output_file.write("Error Cuadratico Medio: " + str(ecms) + "\n\n")
+output_file.write("Peak to Signal Noise Ratio: " + str(psnrs) + "\n")
+output_file.write("Longitud: " + str(len(ecms)) + "\n\n\n\n")
+output_file.close()
+
