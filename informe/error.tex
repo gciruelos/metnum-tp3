@@ -40,6 +40,7 @@ Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obt
 \begin{minipage}{0.33\textwidth}   
     \includegraphics[width=1\textwidth]{imgs/resultados_error/darthvader_4.png} 
 \end{minipage}
+\label{fig:errdarthvader}
 \caption{\footnotesize Resultados del cálculo de ECM y PSNR para cada algoritmo en el video \texttt{darthvader}. Para Splines cúbicos se indica además el tamaño de los bloques utilizados.}
 \end{figure}
 
@@ -64,6 +65,7 @@ Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obt
 \begin{minipage}{0.33\textwidth}   
     \includegraphics[width=1\textwidth]{imgs/resultados_error/ff6_4.png} 
 \end{minipage}
+\label{fig:errff6}
 \caption{\footnotesize Resultados del cálculo de ECM y PSNR para cada algoritmo en el video \texttt{ff6}. Para Splines cúbicos se indica además el tamaño de los bloques utilizados.}
 \end{figure}
 
@@ -88,6 +90,7 @@ Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obt
 \begin{minipage}{0.33\textwidth}   
     \includegraphics[width=1\textwidth]{imgs/resultados_error/motocross_4.png} 
 \end{minipage}
+\label{fig:errmotocross}
 \caption{\footnotesize Resultados del cálculo de ECM y PSNR para cada algoritmo en el video \texttt{motocross}. Para Splines cúbicos se indica además el tamaño de los bloques utilizados.}
 \end{figure}
 
@@ -112,6 +115,54 @@ Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obt
 \begin{minipage}{0.33\textwidth}   
     \includegraphics[width=1\textwidth]{imgs/resultados_error/penal_4.png} 
 \end{minipage}
+\label{fig:errpenal}
 \caption{\footnotesize Resultados del cálculo de ECM y PSNR para cada algoritmo en el video \texttt{penal}. Para Splines cúbicos se indica además el tamaño de los bloques utilizados.}
 \end{figure}
+
+Antes de analizar los resultados, vale la pena explicar los gráficos que aparecen en las páginas anteriores. Cada boxplot representa los errores (en ECM y PSNR respectivamente) de todos los frames del video. Luego analizaremos dentro de cada video porqu\'e a veces el error es más alto y porqu\'e es más bajo, pero para este análisis en general nos bastará con los boxplots.
+
+\subsubsection{\texttt{darthvader}}
+
+Lo primero que podemos notar (muy esperable) es que el error aumenta cuando se intentan interpolar más cuadros. Esto se debe a que se intenta obtener más cantidad de cuadros a partir de una cantidad de datos menor, lo cual obviamente deteriorará la calidad del video.
+
+Lo segundo que notamos es que, mientras el algoritmo de nearest neighbour tiene un error relativamente grande, los algoritmos de interpolación lineal y splines cúbicos (con todos los tamaños de bloque) presentan resultados muy similares. 
+Creemos que esto se debe a la lentitud con la que transcurren los hechos en el video provoca que cualquier interpolación razonable de los valores de buenos resultados. 
+
+
+\subsubsection{\texttt{ff6}}
+
+En este caso, al igual que antes y al igual que en todos los videos que analizaremos, el error aumenta cuando se intentan interpolar más cuadros.
+
+
+A diferencia que en el video anterior, en este caso se nota una diferencia entre los m\'etodos que utilizamos. Nearest neighbour, como siempre, es el peor, teniendo errores muy altos (dado que los cambios de escenarios en este video son bruscos, un frame puede no tener nada que ver con su anterior).
+
+
+Luego, podemos ver que la interpolación lineal tuvo mejor performance que los splines cúbicos. La razón de eso es probablemente que, al ser un video que tiene cambios muy abrutpos de escenarios, es mucho mejor obtener los cuadros interpolados con la información lo más local posible, dado que cuadros lejanos tienen muy poco que ver.
+
+Sin embargo, cuantos cuadros se tomen en el spline no afecta demasiado al error. Esto puede explicarse porque los escenarios son relativamente inmóviles, entonces la cantidad de cuadros que se tomen (mientras sean acotados) no debería afectar demasiado porque no agregan información nueva.
+
+\subsubsection{\texttt{motocross}}
+
+Como siempre, el error aumenta cuando se intentan interpolar más cuadros.
+
+En este video sucede algo similar al anterior. Nearest neighbour es el peor porque el video se mueve muy rápido, un frame tiene poco que ver con el anterior. Nuevamente, la interpolación lineal tuvo mejor performance que los splines cúbicos. La razón de esto es la misma que la de antes: al ser un video que se mueve muy rápido, es mejor interpolar con información local que con información global.
+
+Finalmente, podemos notar una diferencia con el video anterior. Podemos observar en la figura \ref{fig:errmotocross} como a más grande es el bloque que se toma para hacer splines cúbicos, más grande es el error. Puede verse que para un tamaño de bloque de 4 frames, el error cuadrático medio es aproximadamente 900, para un bloque de 8 frames de 950 y para uno de 12 es de 1000. 
+
+
+Este hecho justifica nuestra explicación de porque en el video \texttt{ff6} el tamaño de los bloques no afectó tanto, dado que en este caso tomar bloques más grandes sí agrega nueva información, que sin embargo es perjudicial para el resultado, porque como todo se mueve muy rapidamente, la información nueva altera y distorsiona los resultados.
+
+\subsubsection{\texttt{penal}}
+
+Este es un video muy interesante para analizar. Primero, recordemos que en todo momento la mayor parte del video se encuentra quieta, mientras que algunos objetios que ocupan poca parte de la pantalla se mueven. 
+
+Esto produce que (cuando hay que interpolar 1 o 2 cuadros) el error cuadrático medio se minimice con el algoritmo de vecino más cercano. Esto se debe a que como la mayor parte del video esta quieta, al interpolar con vecino mas cercanos, nos aseguramos que el error en estos lugares sea mínimo, y en las regiones del video que se mueven, el error tambi\'en será relativamente pequeño.
+
+Además, al interpolar 1 o 2 cuadros, el error al usar splines (con cualquier tamaño de bloques) es menor que el de interpolación lineal. Una posible explicación para esto es que splines se adapta mejor que la interpolación lineal fragmentaria a los movimientos rápidos del video, manteniendo la exactitud de los pixeles que cambian poco, con lo cual puede sacarle ventaja.
+
+Ahora bien, cuando se intentan interpolar 4 u 8 cuadros, la situación es muy distinta. Aquí el error de el algoritmo nearest neighbour sube mucho, sobrepasando al de interpolación lineal y splines cúbicos, que estan prácticamente empatados.
+
+Explicar esto no es dificil: al tener que interpolar más cuadros, nearest neighbour empieza a aumentar su error dado que repetir un cuadro muchas conlleva bastante error en las partes del video de alto movimiento, dado que el error se arrastra por muchos cuadros. Los algoritmos de interpolación lineal y splines, al utilizar la información mas inteligentemente, son mas resilientes a la falta de información, lo cual les permite sobrepasar en rendimiento (con respecto al error) al
+algoritmo de nearest neighbour cuando hay que interpolar muchos cuadros.
+
 
