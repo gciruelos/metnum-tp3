@@ -23,7 +23,7 @@ Y análogamente para el resto de los cuadros.
 Ahora pasemos a ver los métodos implementados y analizados en este trabajo.
 
 
-\subsubsection{Vecino más cercano}
+\subsubsection{Nearest neighbour}
 
 El primer método, llamado vecino más cercano o \emph{nearest neighbour} en inglés, se basa en interpolar un punto por el valor del punto más cercano conocido. Formalmente, si $(x_1, y_1), ..., (x_n, y_n)$ son nuestros puntos de dato, la función que interpola sería:
 
@@ -36,7 +36,7 @@ En el caso particular de este problema, es más simple aún. Si tenemos que colo
 En el caso de que $k$ sea impar, simplemente tenemos un valor en el medio al que podemos darle cualquiera de los 2 valores, es una decisión de diseño. En el caso de este trabajo, ese valor es $c_2$
 
 
-\subsubsection{Interpolación lineal}
+\subsubsection{Interpolación lineal fragmentaria}
 
 La interpolación lineal (de a trozos) es la interpolación polinomial de a trozos más simple. Consiste en unir una serie de puntos
 
@@ -80,7 +80,7 @@ Entonces, simplemente, para cada $k$ entre 0 y $ancho * alto$, tenemos un vector
 Ahora pasaremos a describir brevemente los métodos utilizados.
 
 
-\subsubsection{Nearest Neighbour}
+\subsubsection{Nearest neighbour}
 \texttt{\textbf{vector<unsigned int>} nn(\textbf{vector<unsigned int>} valores, \textbf{int} cuadros)}
 
 \begin{itemize}
@@ -91,7 +91,7 @@ Ahora pasaremos a describir brevemente los métodos utilizados.
 El código es muy simple, y respeta lo explicado anteriormente cuando se describió el método
 
 
-\subsubsection{Interpolación Lineal Fragmentaria}
+\subsubsection{Interpolación lineal fragmentaria}
 \texttt{\textbf{vector<unsigned int>} lineal(\textbf{vector<unsigned int>} valores, \textbf{int} cuadros)}
 
 \begin{itemize}
