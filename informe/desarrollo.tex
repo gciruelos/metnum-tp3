@@ -68,6 +68,80 @@ En el caso de este trabajo, se requirió que la cantidad de cuadros que se tiene
 Para una explicación más profunda del método, se puede consultar \cite{burden}. Además, la implementación de splines de este trabajo también esta basada en \cite{burden}, posee algunas correcciones y está modificada para permitir realizar la interpolación de a bloques de tamaño fijo.
 
 
+\subsection{Estructuración del código}
+
+Para el modelado del problema utilizamos una interfaz muy simple. El archivo \texttt{tp-main.cpp} se ocupa de leer el todo el input, llamar a la rutina interpoladora correspondiente para cada pixel, y luego praparar el resultado para finalmente escribirlo en el archivo de output.
+
+Lo que hacemos es tener una variable \texttt{frames} de tipo \texttt{std::vector < std::vector<unsigned int > {} > }, en la que el vector \texttt{frames[k]} representa los valores del pixel $k$ en cada frame(pensamos al video como una tira de pixeles en lugar de una matriz de pixeles).
+
+
+Entonces, simplemente, para cada $k$ entre 0 y $ancho * alto$, tenemos un vector $frames[k]$, que podemos pensar como una funcion $ k \mapsto $\texttt{frames[$k$]}; y esta función será la que interpolemos, como explicamos anteriormente.
+
+Ahora pasaremos a describir brevemente los métodos utilizados.
+
+
+\subsubsection{Nearest Neighbour}
+\texttt{\textbf{vector<unsigned int>} nn(\textbf{vector<unsigned int>} valores, \textbf{int} cuadros)}
+
+\begin{itemize}
+    \item  \underline{valores} será, como dijimos antes, \texttt{frames[$k$]}, para algun $k$.
+    \item \underline{cuadros} serán la cantidad de valores nuevos a colocar entre dos valores consecutivos de \underline{valores}.
+\end{itemize}
+
+El código es muy simple, y respeta lo explicado anteriormente cuando se describió el método
+
+
+\subsubsection{Interpolación Lineal Fragmentaria}
+\texttt{\textbf{vector<unsigned int>} lineal(\textbf{vector<unsigned int>} valores, \textbf{int} cuadros)}
+
+\begin{itemize}
+    \item  \underline{valores} será \texttt{frames[$k$]}, para algun $k$.
+    \item \underline{cuadros} serán la cantidad de valores nuevos a colocar entre dos valores consecutivos de \underline{valores}.
+\end{itemize}
+
+
+Como dijimos anteriormente, la interpolación lineal fragmentaria se basa en, dados los puntos $(a,f(a)), (b,f(b))$, interpolar entre ellos con \[\frac{f(b)-f(a)}{b-a} (x-a) + f(a)\]
+
+En este caso, la formula para un $k$ dado sería,
+
+\[\frac{valores[k+1] - valores[k]}{k+1 - k} (x - k) + valores[k] = (valores[k+1] - valores[k]) (x - k) + valores[k] \]
+
+Entonces, hacemos como explicamos anteriormente, y en el caso de que $cuadros = c$, basta con tomar los siguientes valores para $x - k$:
+
+\[\frac1{c+1}, \frac2{c+1}, ..., \frac{c}{c+1}\]
+
+\subsubsection{Splines cúbicos}
+
+\texttt{\textbf{vector<unsigned int>} splines(\textbf{vector<unsigned int>} valores, \textbf{int} cuadros, \textbf{int} radio)}
+
+\begin{itemize}
+    \item  \underline{valores} será \texttt{frames[$k$]}, para algun $k$.
+    \item \underline{cuadros} serán la cantidad de valores nuevos a colocar entre dos valores consecutivos de \underline{valores}.
+    \item \underline{radio} será la cantidad de cuadros que contendrá cada bloque. No es necesario que radio divida a la cantidad de cuadros, en ese caso el ultimo bloque simplemente tendrá menos cuadros (sí es necesario que el último bloque tenga más de 3 cuadros, para poder resolver el sistema).
+\end{itemize}
+
+La función splines simplemente lo que hace es partir al video en bloques, y para cada bloque generar el spline correspondiente e interpolar allí utilizandolo. Para llevar esto a cabo, se utilizará la funcion:
+
+
+\texttt{\textbf{void} splines\_bloque(vector<double> ys, \textbf{int} cuadros, \textbf{vector<double>*} resultado)}
+
+Esta función se ocupará de obtener el spline que interpola a los valores de \textbf{ys} utilizando el algoritmo de \cite{burden} modificado para que funcione correctamente. Luego, hara \textbf{push\_back} de los resultados en  \textbf{resultado}.
+
+
+
+
+\subsection{Experimentación}
+
+La experimentación del presente trabajo se divide a grandes rasgos en tres partes:
+
+\begin{itemize}
+    \item Primero nos ocuparemos de las mediciones de tiempos y análisis de complejidad de los algoritmos y métodos utilizados.
+    \item Luego, nos centraremos en lo que concierne la medición del error de los resultados obtenidos a partir de los métodos, desde un punto de vista cuantitativo.
+    \item Finalmente, nos centraremos en un análisis cualitativo de los resultados, intentando analizar subjetivamente los resultados obtenidos, especialmente buscando \emph{artifacts} o errores que la simple medición del error numérico no nos permite percibir.
+\end{itemize}
+
+En cada parte explicaremos la metodología con la que realizamos los experimentos correspondientes, además de analizar en profundidad los resultados obtenidos.
+
 
 
 
