@@ -121,6 +121,10 @@ Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obt
 
 Antes de analizar los resultados, vale la pena explicar los gráficos que aparecen en las páginas anteriores. Cada boxplot representa los errores (en ECM y PSNR respectivamente) de todos los frames del video. Luego analizaremos dentro de cada video porqu\'e a veces el error es más alto y porqu\'e es más bajo, pero para este análisis en general nos bastará con los boxplots.
 
+Además, vale la pena explicar en que se basan el ECM y el PSNR. El ECM (Error Cuadrático Medio) se calcula como el promedio de todos los errores al cuadrado. Por lo tanto, a más alto, más error. Para este trabajo, consideraremos que un error bajo será un ECM menor a 25, y error medio será ECM menor a 400 (dado que representan diferencias de 5 y 20 respectivamente).
+
+El PSNR (Peak Signal-to-Noise Ratio), se define como $PSNR = 10 \log_{10}(\frac{255^2}{ECM})$. Por lo tanto, a más alto, menos error tendrá la imagen. Puede pensarse como una suerte de ECM normalizado. Usando los mismos números de antes, cosideraremos que el error es bajo si el PSNR es mayor a 35 y que es medio si es mayor a 22 (pero menor a 35).
+
 \subsubsection{\texttt{darthvader}}
 
 Lo primero que podemos notar (muy esperable) es que el error aumenta cuando se intentan interpolar más cuadros. Esto se debe a que se intenta obtener más cantidad de cuadros a partir de una cantidad de datos menor, lo cual obviamente deteriorará la calidad del video.
@@ -164,5 +168,26 @@ Ahora bien, cuando se intentan interpolar 4 u 8 cuadros, la situación es muy di
 
 Explicar esto no es dificil: al tener que interpolar más cuadros, nearest neighbour empieza a aumentar su error dado que repetir un cuadro muchas conlleva bastante error en las partes del video de alto movimiento, dado que el error se arrastra por muchos cuadros. Los algoritmos de interpolación lineal y splines, al utilizar la información mas inteligentemente, son mas resilientes a la falta de información, lo cual les permite sobrepasar en rendimiento (con respecto al error) al
 algoritmo de nearest neighbour cuando hay que interpolar muchos cuadros.
+
+\subsubsection{Análisis del error a lo largo del tiempo}
+
+Para finalizar con el análisis cuantitativo del error de los algoritmos, nos propusimos analizar como varía el error de nuestra interpolación a lo largo del tiempo para un video dado. Para ello, utilizamos el video \texttt{darthvader}, interpolando 1 cuadro entre dos cuadros consecutivos. Veamos los resultados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{imgs/resultados_error/recorrido.png}
+    \includegraphics[width=1\textwidth]{imgs/resultados_error/temporal.pdf}
+    \caption{Error Cuadrático Medio a lo largo del tiempo para los distintos algoritmos para el video \texttt{darthvader}. Además arriba se puede ver un extracto del video en ese momento.}
+    \label{fig:errtiempo}
+\end{figure}
+
+Como podemos observar en la figura \ref{fig:errtiempo}, al principio del video, los frames son prácticamente iguales, entonces el error en todos los algoritmos es muy bajo, dado que interpolar es básicamente repetir el frame.
+
+Cuando aparece en escena el objeto que se mueve, el error aumenta. Sin embargo, como la velocidad a la que se mueve es muy baja, el error sigue siendo relativamente medio-bajo. 
+
+Luego, cuando Darth Vader tropieza y se cae, el error asciende mucho. Esto se debe a que el movimiento es mucho, entonces interpolar se vuelve más dificil, y aparecen artifacts, dado que nuestros algoritmos no hacen segimiento de objetos, si no que simplemente interpolan pixel a pixel.
+
+Finalmente, la cámara se mueve un poco, generando error más bajo que antes, aunque sigue siendo alto, por la misma razón de la que se habló anteriormente.
+
 
 
