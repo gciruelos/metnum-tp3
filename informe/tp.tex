@@ -66,19 +66,20 @@
 
 %%caratula
 \materia{Laboratorio de Métodos Numéricos}
-\titulo{Trabajo Práctico Número 2}
+\titulo{Trabajo Práctico Número 3}
 \subtitulo{\emph{Un juego de niños}}
 %\grupo{Grupo 12}
 \integrante{Ciruelos Rodríguez, Gonzalo}{063/14}{gonzalo.ciruelos@gmail.com}
 \integrante{Costa, Manuel José Joaquín}{035/14}{manuc94@hotmail.com}
 \integrante{Gatti, Mathias Nicolás}{477/14}{mathigatti@gmail.com}
 
-\abstracto{asdf}
+\abstracto{En el presente trabajo práctico nos proponemos atacar el problema de incrementar la cantidad de cuadros de un video con el fin de obtener un efecto de cámara lenta o simplemente mejorar la fluidez del mismo. Para esto consideramos un modelo matemático de la situación que nos permite llevar el problema al terreno de la interpolación. Una vez hecho esto, resolveremos el nuevo problema haciendo uso de tres métodos ampliamente conocidos en el área: vecino más cercano, interpolación lineal y trazadores cúbicos (o splines cúbicos). A su vez para el método de splines consideraremos tres variantes, modificando el tamaño del bloque usado, es decir la cantidad de \textit{frames} originales de los que dependerán los \textit{frames} interpolados. Evaluaremos las ventajas y desventajas de cada uno en términos de tiempo de cómputo, fiabilidad (por ejemplo, trataremos de minimizar los \textit{artifacts}) y fluidez de los resultados obtenidos.
+Para esto consideraremos distintos tipos de videos que exploten diversas características (por exceso o defecto) como son movimientos de cámara, movimientos abruptos de objetos, etc. Finalmente, concluiremos que en términos generales la interpolación lineal y los splines cúbicos con bloques de tamaño ocho son los que nos dan las mejores prestaciones según la situación.}
 
-\palabraClave{key1}
-\palabraClave{key2}
-\palabraClave{key3}
-\palabraClave{key4}
+\palabraClave{Cámara lenta}
+\palabraClave{Vecino más cercano}
+\palabraClave{Interpolación lineal}
+\palabraClave{Splines cúbicos}
 
 \usepackage{etoolbox}
 \AtBeginEnvironment{tikzpicture}{\shorthandoff{>}\shorthandoff{<}}{}{}
