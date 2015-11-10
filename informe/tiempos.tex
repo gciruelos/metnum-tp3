@@ -1,5 +1,7 @@
 \subsection{Análisis de rendimiento}
-A continuación realizaremos un análisis de los tiempos insumidos por los métodos, el cual estará dividido en dos partes: primero, un análisis superficial de la complejidad algorítmica de cada método, lo que nos dará una idea de lo que deberíamos observar en los experimentos; y luego, la contrastación empírica.
+A continuación realizaremos un análisis de los tiempos insumidos por los métodos, el cual estará dividido en dos partes: primero, en forma preliminar para tener una orientación de que variables estudiar, un análisis superficial de la complejidad algorítmica de cada método; y luego, la contrastación empírica.
+
+La PC sobre la que se tomaron los tiempos cuenta con un procesador Intel(R) Core(TM) i5-2500 @ 3.30GHz y 8GB de RAM.
 
 \subsubsection{Complejidades de los métodos}
 Utilizaremos la siguiente notación:
@@ -95,3 +97,13 @@ Algo interesante que puede observarse en este gráfico es que, a diferencia de l
 Esto resulta razonable a la luz de los hechos vistos en el punto anterior: si habíamos dicho que el tiempo del método aumentaba cuantas más veces se caía en el \texttt{while} de la función \texttt{splines} es lógico que al aumentar la variable de la cual este hecho depende directamente esta situación se potencie. Visto con un ejemplo: si dado un video le aumentáramos en 8 la cantidad de sus cuadros originales, para \emph{splines (8)} y \emph{splines (12)} esto implicaría a lo sumo caer una vez más en el \texttt{while}, mientras que para \emph{splines (4)} resulta en hacerlo dos veces más. Si lo hiciéramos en 24 cuadros, serían 2 veces para \emph{splines (12)}, 3 para \emph{splines (8)} y 6 para \emph{splines (4)}. Es decir que el aumento siempre es desigual, y eso justifica la diferencia en las pendientes.
 
 \subsubsection{Resolución}
+Finalmente, analicemos la influencia de la resolución. Es de suponer que el comportamiento sea similar al del caso anterior, o sea, que las pendientes de crecimiento sean distintas para todos los métodos, pues la cantidad de píxeles que conforman un \emph{frame} es lo que determina la cantidad de veces que se llame a las funciones que implementan los métodos de interpolación, por lo cual es razonable que todas las constantes propias de cada método se vean potenciadas.
+
+En efecto, la figura \ref{fig:times-resolucion} verifica estas suposiciones.  
+
+\begin{figure}[H]
+ \centering
+	\includegraphics[width=0.7\textwidth]{imgs/resultados_tiempos/resolucion.pdf}
+	\caption{\footnotesize Tiempo que se requiere al aplicar cada método sobre un video para interpolar 2 cuadros en función de la resolución del mismo. Los puntos representan la media 0.20-podada de cada muestra. Las barras verticales indican la varianza.}
+	\label{fig:times-resolucion}
+\end{figure}
