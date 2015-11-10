@@ -112,7 +112,6 @@ std::vector<unsigned int> lineal(std::vector<unsigned int> valores_i, int cuadro
 
 void splines_bloque(std::vector<double> ys, int cuadros,
                     std::vector<double>* resultado){
-    //std::vector<double> local;
 			
 	int sz = ys.size();
 	int n = sz-1;
@@ -158,7 +157,6 @@ void splines_bloque(std::vector<double> ys, int cuadros,
 			
 	for(int i = 0; i < n; i++){
 		resultado->push_back(ys[i]);
-        //local.push_back(ys[i]);
         // aca tengo que interpolar usando splines
         // (i, valores[i]) (i+1, valores[i+1])
         for(int j = 0; j < cuadros; j++){
@@ -174,10 +172,6 @@ void splines_bloque(std::vector<double> ys, int cuadros,
                                  bs[i] * z_j +
                                  cs[i] * z_j * z_j + 
                                  ds[i] * z_j * z_j * z_j);
-            // local.push_back(as[i] +
-            //                      bs[i] * z_j +
-            //                      cs[i] * z_j * z_j + 
-            //                      ds[i] * z_j * z_j * z_j);
         }
 	} 
 }

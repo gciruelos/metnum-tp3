@@ -25,7 +25,6 @@ int main(int argc, char * argv[]){
    * argv[2] es el archivo de output
    * argv[3] es el metodo a ejecutar
    * argv[4] es el cantidad de cuadros a agregar
-   * argv[5] es el archivo de salida para los tiempos
    */
 
 
@@ -33,7 +32,6 @@ int main(int argc, char * argv[]){
     char * aux;
     enum metodo m = (enum metodo) strtol(argv[3], &aux, 10);
     unsigned int cant_cuadros = strtol(argv[4], &aux, 10);
-    unsigned int cant_iteraciones = strtol(argv[6], &aux, 10); //Acordarse de sacar
     unsigned int c, height, width, f;
     // Este va a ser un vector de height*width entradas, y cada entrada va 
     // a ser un vector de c(uadros) cantidad de entradas cada uno
@@ -87,10 +85,6 @@ int main(int argc, char * argv[]){
     
     std::vector<std::vector<unsigned int> > resultado; 
     
-    /***********Tomo tiempos***********/
-    for (int i = 0; i < cant_iteraciones; i++){
-    clock_t begin = clock();
-
 	for(unsigned int pixel = 0; pixel < height * width; pixel++){
 		std::vector<unsigned int> valores = frames[pixel];
 		std::vector<unsigned int> interpolado;
@@ -113,15 +107,6 @@ int main(int argc, char * argv[]){
             input_file >> gris;
             frames[pixel].push_back(gris);
     }
-
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    
-    FILE* times_file = fopen(argv[5], "a");
-    fprintf(times_file, "Método %d, %d cuadros: %f\n", m, cant_cuadros, elapsed_secs);
-    fclose(times_file);
-    }
-    /***********************************/
 
     unsigned int nuevos_cuadros = (c-1) * cant_cuadros + c;
     std::cout << c << " " << cant_cuadros << " "<<  nuevos_cuadros << std::endl;
