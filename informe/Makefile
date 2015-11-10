@@ -1,7 +1,7 @@
 tp: tp.tex
+	make clean
 	pdflatex tp.tex
 	bibtex tp
-	pdflatex tp.tex
 	pdflatex tp.tex
 	pdflatex tp.tex
 

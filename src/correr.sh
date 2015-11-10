@@ -1,4 +1,6 @@
 python2 metnum.py build
+echo "Convirtiendo video a txt"
+python2 tools/videoToTextfile.py
 echo "Interpolando..."
 ./tp data/funnybaby.txt aca.out $1 $2
 echo "Convirtiendo a video..."

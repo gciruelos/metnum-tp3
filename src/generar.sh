@@ -3,12 +3,12 @@
 # $2 : es el metodo que se quiere usar
 # $3 : es la cantidad de cuadros que se quiere interpolar
 txtf=$1".txt"
-txtoriginal=$1".original.txt"
 txtout=aca.out
 rm -f data/out.avi
+echo "Compilando..."
 python2 metnum.py build
+echo "Convirtiendo a txt..."
 python2 tools/videoToTextfile.py $1 $txtf $3
-python2 tools/videoToTextfile.py $1 $txtoriginal 0
 echo "Interpolando..."
 ./tp $txtf $txtout $2 $3
 echo "Convirtiendo a video..."

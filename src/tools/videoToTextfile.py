@@ -9,6 +9,9 @@ videoFilename = sys.argv[1]
 textFilename = sys.argv[2]
 salto = int(sys.argv[3])+1
 
+print "Archivo de video: " + videoFilename
+print "Archivo de texto: " + textFilename
+print "Salto: " + str(salto)
 
 # Abrimos archivo de video.
 video = cv2.VideoCapture(videoFilename)
@@ -43,6 +46,7 @@ for k in xrange(0,int(nFrames),salto):
 		f.write(str(grayFrame[i][int(video.get(3)-1)]))
 		f.write('\n')
 
+f.close()
 video.release()
 cv2.destroyAllWindows()
 #print 'Fin'
