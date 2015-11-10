@@ -1,6 +1,7 @@
 make clean && make
 for i in ff6 penal motocross darthvader; do #Itero sobre cada archivo
-	txttimes="data/$i/$i.times.txt"
+	-mkdir $i
+	txttimes="data/$i/$i.times.txt"       
 	rm -f $txttimes
 	for k in 1 2 4 8;do 					#Itero sobre cada cant de cuadros a interpolar
 		txtf="data/$i.txt"
@@ -20,4 +21,8 @@ for i in ff6 penal motocross darthvader; do #Itero sobre cada archivo
 		done
 		rm -f $txtf
 	done
+	rm -f $txttimes
 done
+
+#txttimes sólo está para que ande ./tp pero se borra porque los resultados de estos tiempos no sirven.
+#Para tomar los tiempos del informe se usó el script times.sh
