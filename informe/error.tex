@@ -5,17 +5,17 @@ Antes de ver los resultados, hagamos un análisis de los casos de prueba que ten
 \begin{itemize}
     \item \texttt{darthvader}. El primer video contiene una cámara fija y un objeto moviendose a una velocidad relativamente lenta, con su entorno quieto. 
     \item \texttt{ff6}. Este es un video que contiene (a pesar de su corta duración), 6 tomas en escenarios totalmente distintos. Algunos escenarios presentan mucho movimiento, otros estan prácticamente quietos. Este es un video muy interesante para analizar porque es esperable que los algoritmos de interpolación en los que importa sobre todo información local (vecinos más cercanos, interpolación lineal fragmentaria) funcionen mejor que aquellos que toman información global (splines). Analizaremos todo esto más adelante. 
-    \item \texttt{motocross}. En este video la cámara se mueve a gran velocidad, siguiendo a un objeto (una moto) que se encuentra más o menos centrada a lo largo de todo el video. El escenario que rodea a la moto se mueve en muy rápidamente.
-    \item \texttt{penal}. En este video la cámara esta nuevamente fija, pero ahora hay un objeto que se mueve a velocidad medianemente rápida (pateador y arquero) y otro objeto que se mueve a una velocidad muy alta (pelota); mientras que todo el entorno se encuentra quieto. 
+    \item \texttt{motocross}. En este video la cámara se mueve a gran velocidad, siguiendo a un objeto (una moto) que se encuentra más o menos centrada a lo largo de todo el video. 
+    \item \texttt{penal}. En este video la cámara está nuevamente fija, pero ahora hay un objeto que se mueve a velocidad medianemente rápida (pateador y arquero) y otro objeto que se mueve a una velocidad muy alta (pelota); mientras que todo el entorno se encuentra quieto. 
 \end{itemize}
 
-Elegimos estos videos porque creemos que representan las posibles situaciones o combinaciones que puede presentar un video de la vida real. No elegimos videos confeccionados a mano para analizar casos borde o extremos porque creemos que el análisis más interesante que se puede hacer está al rededor de casos reales, que son finalmente sobre los cuales se aplicarán estos algoritmos.
+Elegimos estos videos porque creemos que representan las posibles situaciones o combinaciones que puede presentar un video de la vida real. No elegimos videos confeccionados a mano para analizar casos borde o extremos porque creemos que el análisis más interesante que se puede hacer está alrededor de casos reales, que son finalmente sobre los cuales se aplicarán estos algoritmos.
 
 La métodología de experimentación fue la siguiente: extrajimos 1,2,4 u 8 cuadros por medio de cada video (utilizando el script \texttt{videoToTextfile.py}) y luego lo interpolamos con nuestros algoritmos. Finalmente, utilizando un script hecho por nosotros, comparamos los valores de los píxeles del video original contra los interpolados por nosotros. 
 
 Elegimos esa cantidad de cuadros porque más de 8 cuadros se torna demasiado para interpolar, dado que se pierden muchos detalles del video original y el error se torna realmente alto (ya sucede eso con 8 cuadros).
 
-Por último, para analizar el algoritmo de Splines utilizamos bloques de 4, 8 y 12 cuadros porque, nuevamente, si los bloques eran más grandes el video comenzaba a tener importantes artifacts (lo analizaremos más adelante, cuando analicemos cualitativamente los resultados) y entonces nos pareció adecuado poner 12 como el tamaño máximo de bloque a tomar (ya en algunos videos 12 es demasiado y el resultado es de mala calidad). Esto se debe a la localidad vs. globalidad de la que hablamos antes, dado que si un los frames de un video cambian mucho a lo largo del tiempo, tomar en cuenta frames lejanos a la hora de interpolar es contraproducente.
+Por último, para analizar el algoritmo de Splines utilizamos bloques de 4, 8 y 12 cuadros porque, nuevamente, si los bloques eran más grandes el video comenzaba a tener importantes artifacts (ver sección \ref{subsec:cualitativo}) y entonces nos pareció adecuado poner 12 como el tamaño máximo de bloque a tomar (ya en algunos videos 12 es demasiado y el resultado es de mala calidad). Esto se debe a la localidad vs. globalidad de la que hablamos antes, dado que si los frames de un video cambian mucho a lo largo del tiempo, tomar en cuenta frames lejanos a la hora de interpolar es contraproducente.
 
 Sin más aclaraciones que hacer, pasemos a ver y analizar los resultados que obtuvimos.
 
@@ -166,7 +166,7 @@ Además, al interpolar 1 o 2 cuadros, el error al usar splines (con cualquier ta
 
 Ahora bien, cuando se intentan interpolar 4 u 8 cuadros, la situación es muy distinta. Aquí el error de el algoritmo nearest neighbour sube mucho, sobrepasando al de interpolación lineal y splines cúbicos, que estan prácticamente empatados.
 
-Explicar esto no es dificil: al tener que interpolar más cuadros, nearest neighbour empieza a aumentar su error dado que repetir un cuadro muchas conlleva bastante error en las partes del video de alto movimiento, dado que el error se arrastra por muchos cuadros. Los algoritmos de interpolación lineal y splines, al utilizar la información mas inteligentemente, son mas resilientes a la falta de información, lo cual les permite sobrepasar en rendimiento (con respecto al error) al
+Explicar esto no es dificil: al tener que interpolar más cuadros, nearest neighbour empieza a aumentar su error dado que repetir un cuadro muchas veces conlleva bastante error en las partes del video de alto movimiento, dado que el error se arrastra por muchos cuadros. Los algoritmos de interpolación lineal y splines, al utilizar la información mas inteligentemente, son mas \emph{resilientes} a la falta de información, lo cual les permite sobrepasar en rendimiento (con respecto al error) al
 algoritmo de nearest neighbour cuando hay que interpolar muchos cuadros.
 
 \subsubsection{Análisis del error a lo largo del tiempo}
@@ -185,7 +185,7 @@ Como podemos observar en la figura \ref{fig:errtiempo}, al principio del video, 
 
 Cuando aparece en escena el objeto que se mueve, el error aumenta. Sin embargo, como la velocidad a la que se mueve es muy baja, el error sigue siendo relativamente medio-bajo. 
 
-Luego, cuando Darth Vader tropieza y se cae, el error asciende mucho. Esto se debe a que el movimiento es mucho, entonces interpolar se vuelve más dificil, y aparecen artifacts, dado que nuestros algoritmos no hacen segimiento de objetos, si no que simplemente interpolan pixel a pixel.
+Luego, cuando Darth Vader tropieza y se cae, el error asciende mucho. Esto se debe a que el movimiento es mucho, entonces interpolar se vuelve más dificil, y aparecen artifacts, dado que nuestros algoritmos no hacen seguimiento de objetos, sino que simplemente interpolan píxel a píxel.
 
 Finalmente, la cámara se mueve un poco, generando error más bajo que antes, aunque sigue siendo alto, por la misma razón de la que se habló anteriormente.
 
